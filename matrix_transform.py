@@ -20,10 +20,10 @@ def flip_horizontal(matrix: List[list]) -> List[list]:
     return transposed
 
 
-def rotate_counterclockwise(matrix: List[list]) -> List[list]:
+def rotate_clockwise(matrix: List[list]) -> List[list]:
     return flip_horizontal(transpose(matrix))
 
-def rotate_clockwise(matrix: List[list]) -> List[list]:
+def rotate_counterclockwise(matrix: List[list]) -> List[list]:
     return flip_horizontal(transpose_reversed(matrix))
 
 
