@@ -162,7 +162,7 @@ class cube:
                     for r, row in enumerate(matrix_temp):
                         for t, tile in enumerate(row):
                             for f, copied_face in enumerate(tile.faces):
-                                match copied_face:                                        
+                                match copied_face.direction:                                        
                                     case direction.LEFT:
                                         if not prime:
                                             matrix[r][t].faces[f] = cube_face(copied_face.color, direction.BACK)
