@@ -14,7 +14,7 @@ class direction(Enum):
     RIGHT = 2
     BACK = 3
     LEFT = 4
-    BOTTOM = 5
+    DOWN = 5
 
 class tile_type(Enum):
     CENTER = 1

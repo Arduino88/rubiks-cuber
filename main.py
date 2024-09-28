@@ -11,7 +11,7 @@ if __name__ == "__main__":
     print('------------------\n')
     rubik.turn(direction.BACK, turns=1, prime=True)
 
-    # Tested: UP, FRONT, RIGHT, LEFT, BOTTOM, BACK 
+    # Tested: UP, FRONT, RIGHT, LEFT, DOWN, BACK 
 
     print('TURNED --')
     rubik.print_cube()

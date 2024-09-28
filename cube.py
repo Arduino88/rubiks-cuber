@@ -1,12 +1,18 @@
-from typing import Set, List
-from copy import deepcopy
+from typing import List, Tuple
 from matrix_transform import rotate_clockwise, rotate_counterclockwise 
 from properties import color, direction, tile_type
+import copy
+
+class cube_face:
+    def __init__(self, color: color, direction: direction):
+        self.color = color
+        self.direction = direction
+
 
 class cube_tile:
-    def __init__(self, faces: Set[color]): # number of sides -> len(faces)
+    def __init__(self, faces: List[cube_face]): # number of sides -> len(faces)
         self.faces = faces
-        self.orientation = direction.UP
+        #self.orientation = direction.UP
         if faces:
             match len(faces):
                 case 1:
@@ -18,20 +24,23 @@ class cube_tile:
                 case 3:
                     self.type = tile_type.CORNER
 
-    def print(self):
+    def get_properties(self) -> str:
+        return_str = ''
         if self.faces is None:
-            print('core tile')
-            return
+            return_str += ('core tile')
+            return return_str
         
         match self.type:
             case tile_type.CENTER:
-                print(f'center: {self.faces}, orientation: {self.orientation}')
+                return_str += (f'center: {self.faces}')
                 
             case tile_type.EDGE:
-                print(f'edge: {self.faces}, orientation: {self.orientation}')
+                return_str += (f'edge: {self.faces}')
 
             case tile_type.CORNER:
-                print(f'corner: {self.faces}, orientation: {self.orientation}')
+                return_str += (f'corner: {self.faces}')
+
+        return return_str
 
 
 class cube:
@@ -43,34 +52,33 @@ class cube:
             raise ValueError(f'center of cube has been assigned a value: {self.data[1][1][1]}')
 
     def load_solved_cube(self):
-        def generate_tile(layer_num: int, col_num: int, row_num: int) -> set:
+        def generate_tile(layer_num: int, col_num: int, row_num: int) -> List[cube_face]:
+            return_list = []
             if layer_num == col_num == row_num == 1:
-                return None
-
-            return_set = set()
+                return return_list
 
             match layer_num:
                 case 0:
-                    return_set.add(color.WHITE)
+                    return_list.append(cube_face(color.WHITE, direction.UP))
 
                 case 2:
-                    return_set.add(color.YELLOW)
+                    return_list.append(cube_face(color.YELLOW, direction.DOWN))
 
             match row_num:
                 case 0:
-                    return_set.add(color.ORANGE)
+                    return_list.append(cube_face(color.ORANGE, direction.LEFT))
 
                 case 2:
-                    return_set.add(color.RED)
+                    return_list.append(cube_face(color.RED, direction.RIGHT))
 
             match col_num:
                 case 0:
-                    return_set.add(color.BLUE)
+                    return_list.append(cube_face(color.BLUE, direction.BACK))
 
                 case 2:
-                    return_set.add(color.GREEN)
+                    return_list.append(cube_face(color.GREEN, direction.FRONT))
 
-            return return_set
+            return return_list
 
         
         for layer in range(3):
@@ -95,7 +103,7 @@ class cube:
             case direction.BACK:
                 matrix = [[self.data[l][0][c] for c in range(3)] for l in range(3)]
 
-            case direction.BOTTOM:
+            case direction.DOWN:
                 matrix = [[self.data[2][r][c] for c in range(3)] for r in reversed(range(3))]
 
             case _:
@@ -128,7 +136,7 @@ class cube:
                     for j in range(3):
                         self.data[2 - i][0][2 - j] = matrix[i][j]
 
-            case direction.BOTTOM:
+            case direction.DOWN:
                 for i in range(3):
                     for j in range(3):
                         self.data[2][2 - i][j] = matrix[i][j]
@@ -137,7 +145,28 @@ class cube:
     def turn(self, face: direction, turns: int, prime: bool):
         matrix = self.read_face(face)
         for _ in range(turns):
-            print('turning...')
+            match face:
+                case direction.UP:
+                    matrix_temp = copy.deepcopy(matrix)
+                    for row in matrix:
+                        for tile in row:
+                            for f in tile.faces:
+                                if f 
+                                
+
+                case direction.FRONT:
+
+                case direction.LEFT:
+
+                case direction.RIGHT:
+
+                case direction.DOWN:
+
+                case direction.BACK:
+
+
+
+
             if prime:
                 matrix = rotate_counterclockwise(matrix)
             else:
@@ -150,8 +179,8 @@ class cube:
         for l, layer in enumerate(self.data):
             for r, row in enumerate(layer):
                 for t, tile in enumerate(row):
-                    print(f'layer {l}, row {r}, tile {t}:')
-                    tile.print()
-                    
+                    print(f'layer {l}, row {r}, tile {t}: {tile.get_properties()}')
 
+                    
+                    
 
