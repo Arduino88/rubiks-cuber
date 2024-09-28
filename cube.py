@@ -35,13 +35,16 @@ class cube_tile:
         
         match self.type:
             case tile_type.CENTER:
-                return_str += (f'center: {self.faces}')
+                return_str += (f'center:')
                 
             case tile_type.EDGE:
-                return_str += (f'edge: {self.faces}')
+                return_str += (f'edge:')
 
             case tile_type.CORNER:
-                return_str += (f'corner: {self.faces}')
+                return_str += (f'corner:')
+
+        for face in self.faces:
+            return_str += ' (' + str(face.color) + ' ' + str(face.direction) + ')'
 
         return return_str
 
@@ -157,27 +160,27 @@ class cube:
                                 match copied_face:                                        
                                     case direction.LEFT:
                                         if not prime:
-                                            matrix[r][t].faces[f].direction = direction.BACK
+                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.BACK)
                                         else:
-                                            matrix[r][t].faces[f].direction = direction.FRONT
+                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.FRONT)
                                     
                                     case direction.FRONT:
                                         if not prime:
-                                            matrix[r][t].faces[f].direction = direction.LEFT
+                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.LEFT)
                                         else:
-                                            matrix[r][t].faces[f].direction = direction.RIGHT
+                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.RIGHT)
 
                                     case direction.RIGHT:
                                         if not prime:
-                                            matrix[r][t].faces[f].direction = direction.FRONT
+                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.FRONT)
                                         else:
-                                            matrix[r][t].faces[f].direction = direction.BACK
+                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.BACK)
 
                                     case direction.BACK:
                                         if not prime:
-                                            matrix[r][t].faces[f].direction = direction.RIGHT
+                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.RIGHT)
                                         else:
-                                            matrix[r][t].faces[f].direction = direction.LEFT
+                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.LEFT)
 
                                     case _:
                                         pass
@@ -189,27 +192,27 @@ class cube:
                                 match copied_face:                                        
                                     case direction.LEFT:
                                         if not prime:
-                                            matrix[r][t].faces[f].direction = direction.DOWN
+                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.DOWN)
                                         else:
-                                            matrix[r][t].faces[f].direction = direction.UP
+                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.UP)
                                     
                                     case direction.UP:
                                         if not prime:
-                                            matrix[r][t].faces[f].direction = direction.RIGHT
+                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.RIGHT)
                                         else:
-                                            matrix[r][t].faces[f].direction = direction.LEFT
+                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.LEFT)
 
                                     case direction.RIGHT:
                                         if not prime:
-                                            matrix[r][t].faces[f].direction = direction.UP
+                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.UP)
                                         else:
-                                            matrix[r][t].faces[f].direction = direction.DOWN
+                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.DOWN)
 
                                     case direction.DOWN:
                                         if not prime:
-                                            matrix[r][t].faces[f].direction = direction.LEFT
+                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.LEFT)
                                         else:
-                                            matrix[r][t].faces[f].direction = direction.RIGHT
+                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.RIGHT)
 
                                     case _:
                                         pass
@@ -222,27 +225,27 @@ class cube:
                                 match copied_face:                                        
                                     case direction.UP:
                                         if not prime:
-                                            matrix[r][t].faces[f].direction = direction.FRONT
+                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.FRONT)
                                         else:
-                                            matrix[r][t].faces[f].direction = direction.BACK
+                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.BACK)
                                     
                                     case direction.FRONT:
                                         if not prime:
-                                            matrix[r][t].faces[f].direction = direction.DOWN
+                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.DOWN)
                                         else:
-                                            matrix[r][t].faces[f].direction = direction.UP
+                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.UP)
 
                                     case direction.DOWN:
                                         if not prime:
-                                            matrix[r][t].faces[f].direction = direction.BACK
+                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.BACK)
                                         else:
-                                            matrix[r][t].faces[f].direction = direction.FRONT
+                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.FRONT)
 
                                     case direction.BACK:
                                         if not prime:
-                                            matrix[r][t].faces[f].direction = direction.UP
+                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.UP)
                                         else:
-                                            matrix[r][t].faces[f].direction = direction.DOWN
+                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.DOWN)
 
                                     case _:
                                         pass
@@ -255,27 +258,27 @@ class cube:
                                 match copied_face:                                        
                                     case direction.FRONT:
                                         if not prime:
-                                            matrix[r][t].faces[f].direction = direction.UP
+                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.UP)
                                         else:
-                                            matrix[r][t].faces[f].direction = direction.DOWN
+                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.DOWN)
                                     
                                     case direction.DOWN:
                                         if not prime:
-                                            matrix[r][t].faces[f].direction = direction.FRONT
+                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.FRONT)
                                         else:
-                                            matrix[r][t].faces[f].direction = direction.BACK
+                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.BACK)
 
                                     case direction.BACK:
                                         if not prime:
-                                            matrix[r][t].faces[f].direction = direction.DOWN
+                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.DOWN)
                                         else:
-                                            matrix[r][t].faces[f].direction = direction.UP
+                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.UP)
 
                                     case direction.UP:
                                         if not prime:
-                                            matrix[r][t].faces[f].direction = direction.BACK
+                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.BACK)
                                         else:
-                                            matrix[r][t].faces[f].direction = direction.FRONT
+                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.FRONT)
 
                                     case _:
                                         pass
@@ -287,27 +290,27 @@ class cube:
                                 match copied_face:                                        
                                     case direction.FRONT:
                                         if not prime:
-                                            matrix[r][t].faces[f].direction = direction.RIGHT
+                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.RIGHT)
                                         else:
-                                            matrix[r][t].faces[f].direction = direction.LEFT
+                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.LEFT)
                                     
                                     case direction.RIGHT:
                                         if not prime:
-                                            matrix[r][t].faces[f].direction = direction.BACK
+                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.BACK)
                                         else:
-                                            matrix[r][t].faces[f].direction = direction.FRONT
+                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.FRONT)
 
                                     case direction.BACK:
                                         if not prime:
-                                            matrix[r][t].faces[f].direction = direction.LEFT
+                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.LEFT)
                                         else:
-                                            matrix[r][t].faces[f].direction = direction.RIGHT
+                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.RIGHT)
 
                                     case direction.LEFT:
                                         if not prime:
-                                            matrix[r][t].faces[f].direction = direction.FRONT
+                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.FRONT)
                                         else:
-                                            matrix[r][t].faces[f].direction = direction.BACK
+                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.BACK)
 
                                     case _:
                                         pass
@@ -320,27 +323,27 @@ class cube:
                                 match copied_face:                                        
                                     case direction.UP:
                                         if not prime:
-                                            matrix[r][t].faces[f].direction = direction.LEFT
+                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.LEFT)
                                         else:
-                                            matrix[r][t].faces[f].direction = direction.RIGHT
+                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.RIGHT)
                                     
                                     case direction.LEFT:
                                         if not prime:
-                                            matrix[r][t].faces[f].direction = direction.DOWN
+                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.DOWN)
                                         else:
-                                            matrix[r][t].faces[f].direction = direction.UP
+                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.UP)
 
                                     case direction.DOWN:
                                         if not prime:
-                                            matrix[r][t].faces[f].direction = direction.RIGHT
+                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.RIGHT)
                                         else:
-                                            matrix[r][t].faces[f].direction = direction.LEFT
+                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.LEFT)
 
                                     case direction.RIGHT:
                                         if not prime:
-                                            matrix[r][t].faces[f].direction = direction.UP
+                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.UP)
                                         else:
-                                            matrix[r][t].faces[f].direction = direction.DOWN
+                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.DOWN)
 
                                     case _:
                                         pass
