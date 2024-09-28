@@ -8,8 +8,8 @@ if __name__ == "__main__":
     rubik.validate_cube()
     rubik.print_cube()
     print('------------------\n')
-    rubik.turn(direction.BACK, turns=1, prime=False)
-
+    rubik.write_moves(['F','R', 'U', 'Ri', 'Ui', 'Fi'])
+    
     # Tested: UP, FRONT, RIGHT, LEFT, DOWN, BACK 
 
     print('TURNED --')

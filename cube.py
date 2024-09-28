@@ -373,7 +373,36 @@ class cube:
             for r, row in enumerate(layer):
                 for t, tile in enumerate(row):
                     print(f'layer {l}, row {r}, tile {t}: {tile.get_properties()}')
-
                     
-                    
+    
+    def write_moves(self, moveList: List[str]):
+        for move in moveList:
+            dir: direction
+            double_turn = False
+            prime = False
+            match move[0]:
+                case "U":
+                    dir = direction.UP
+                case "F":
+                    dir = direction.FRONT
+                case "R":
+                    dir = direction.RIGHT
+                case "B":
+                    dir = direction.BACK
+                case "L":
+                    dir = direction.LEFT
+                case "D":
+                    dir = direction.DOWN
+            
+            if len(move) > 1:
+                match move[1]:
+                    case "i":
+                        prime = True
+                    case "2":
+                        double_turn = True
+            
+            if not double_turn:
+                self.turn(dir, 1, prime)    
+            else:
+                self.turn(dir, 2, prime)
 
