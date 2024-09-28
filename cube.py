@@ -24,6 +24,9 @@ class cube_tile:
                 case 3:
                     self.type = tile_type.CORNER
 
+        else:
+            self.type = tile_type.CORE
+
     def get_properties(self) -> str:
         return_str = ''
         if self.faces is None:
@@ -48,7 +51,7 @@ class cube:
         self.data = [[[None for _ in range(3)] for _ in range(3)] for _ in range(3)]
 
     def validate_cube(self):
-        if self.data[1][1][1].faces is not None:
+        if len(self.data[1][1][1].faces) > 0:
             raise ValueError(f'center of cube has been assigned a value: {self.data[1][1][1]}')
 
     def load_solved_cube(self):
@@ -145,32 +148,209 @@ class cube:
     def turn(self, face: direction, turns: int, prime: bool):
         matrix = self.read_face(face)
         for _ in range(turns):
+            matrix_temp = copy.copy(matrix)
             match face:
                 case direction.UP:
-                    matrix_temp = copy.deepcopy(matrix)
-                    for row in matrix:
-                        for tile in row:
-                            for f in tile.faces:
-                                if f 
-                                
+                    for r, row in enumerate(matrix_temp):
+                        for t, tile in enumerate(row):
+                            for f, copied_face in enumerate(tile.faces):
+                                match copied_face:                                        
+                                    case direction.LEFT:
+                                        if not prime:
+                                            matrix[r][t].faces[f].direction = direction.BACK
+                                        else:
+                                            matrix[r][t].faces[f].direction = direction.FRONT
+                                    
+                                    case direction.FRONT:
+                                        if not prime:
+                                            matrix[r][t].faces[f].direction = direction.LEFT
+                                        else:
+                                            matrix[r][t].faces[f].direction = direction.RIGHT
+
+                                    case direction.RIGHT:
+                                        if not prime:
+                                            matrix[r][t].faces[f].direction = direction.FRONT
+                                        else:
+                                            matrix[r][t].faces[f].direction = direction.BACK
+
+                                    case direction.BACK:
+                                        if not prime:
+                                            matrix[r][t].faces[f].direction = direction.RIGHT
+                                        else:
+                                            matrix[r][t].faces[f].direction = direction.LEFT
+
+                                    case _:
+                                        pass
 
                 case direction.FRONT:
+                    for r, row in enumerate(matrix_temp):
+                        for t, tile in enumerate(row):
+                            for f, copied_face in enumerate(tile.faces):
+                                match copied_face:                                        
+                                    case direction.LEFT:
+                                        if not prime:
+                                            matrix[r][t].faces[f].direction = direction.DOWN
+                                        else:
+                                            matrix[r][t].faces[f].direction = direction.UP
+                                    
+                                    case direction.UP:
+                                        if not prime:
+                                            matrix[r][t].faces[f].direction = direction.RIGHT
+                                        else:
+                                            matrix[r][t].faces[f].direction = direction.LEFT
+
+                                    case direction.RIGHT:
+                                        if not prime:
+                                            matrix[r][t].faces[f].direction = direction.UP
+                                        else:
+                                            matrix[r][t].faces[f].direction = direction.DOWN
+
+                                    case direction.DOWN:
+                                        if not prime:
+                                            matrix[r][t].faces[f].direction = direction.LEFT
+                                        else:
+                                            matrix[r][t].faces[f].direction = direction.RIGHT
+
+                                    case _:
+                                        pass
+                
 
                 case direction.LEFT:
+                    for r, row in enumerate(matrix_temp):
+                        for t, tile in enumerate(row):
+                            for f, copied_face in enumerate(tile.faces):
+                                match copied_face:                                        
+                                    case direction.UP:
+                                        if not prime:
+                                            matrix[r][t].faces[f].direction = direction.FRONT
+                                        else:
+                                            matrix[r][t].faces[f].direction = direction.BACK
+                                    
+                                    case direction.FRONT:
+                                        if not prime:
+                                            matrix[r][t].faces[f].direction = direction.DOWN
+                                        else:
+                                            matrix[r][t].faces[f].direction = direction.UP
+
+                                    case direction.DOWN:
+                                        if not prime:
+                                            matrix[r][t].faces[f].direction = direction.BACK
+                                        else:
+                                            matrix[r][t].faces[f].direction = direction.FRONT
+
+                                    case direction.BACK:
+                                        if not prime:
+                                            matrix[r][t].faces[f].direction = direction.UP
+                                        else:
+                                            matrix[r][t].faces[f].direction = direction.DOWN
+
+                                    case _:
+                                        pass
+
 
                 case direction.RIGHT:
+                    for r, row in enumerate(matrix_temp):
+                        for t, tile in enumerate(row):
+                            for f, copied_face in enumerate(tile.faces):
+                                match copied_face:                                        
+                                    case direction.FRONT:
+                                        if not prime:
+                                            matrix[r][t].faces[f].direction = direction.UP
+                                        else:
+                                            matrix[r][t].faces[f].direction = direction.DOWN
+                                    
+                                    case direction.DOWN:
+                                        if not prime:
+                                            matrix[r][t].faces[f].direction = direction.FRONT
+                                        else:
+                                            matrix[r][t].faces[f].direction = direction.BACK
+
+                                    case direction.BACK:
+                                        if not prime:
+                                            matrix[r][t].faces[f].direction = direction.DOWN
+                                        else:
+                                            matrix[r][t].faces[f].direction = direction.UP
+
+                                    case direction.UP:
+                                        if not prime:
+                                            matrix[r][t].faces[f].direction = direction.BACK
+                                        else:
+                                            matrix[r][t].faces[f].direction = direction.FRONT
+
+                                    case _:
+                                        pass
 
                 case direction.DOWN:
+                    for r, row in enumerate(matrix_temp):
+                        for t, tile in enumerate(row):
+                            for f, copied_face in enumerate(tile.faces):
+                                match copied_face:                                        
+                                    case direction.FRONT:
+                                        if not prime:
+                                            matrix[r][t].faces[f].direction = direction.RIGHT
+                                        else:
+                                            matrix[r][t].faces[f].direction = direction.LEFT
+                                    
+                                    case direction.RIGHT:
+                                        if not prime:
+                                            matrix[r][t].faces[f].direction = direction.BACK
+                                        else:
+                                            matrix[r][t].faces[f].direction = direction.FRONT
+
+                                    case direction.BACK:
+                                        if not prime:
+                                            matrix[r][t].faces[f].direction = direction.LEFT
+                                        else:
+                                            matrix[r][t].faces[f].direction = direction.RIGHT
+
+                                    case direction.LEFT:
+                                        if not prime:
+                                            matrix[r][t].faces[f].direction = direction.FRONT
+                                        else:
+                                            matrix[r][t].faces[f].direction = direction.BACK
+
+                                    case _:
+                                        pass
+
 
                 case direction.BACK:
+                    for r, row in enumerate(matrix_temp):
+                        for t, tile in enumerate(row):
+                            for f, copied_face in enumerate(tile.faces):
+                                match copied_face:                                        
+                                    case direction.UP:
+                                        if not prime:
+                                            matrix[r][t].faces[f].direction = direction.LEFT
+                                        else:
+                                            matrix[r][t].faces[f].direction = direction.RIGHT
+                                    
+                                    case direction.LEFT:
+                                        if not prime:
+                                            matrix[r][t].faces[f].direction = direction.DOWN
+                                        else:
+                                            matrix[r][t].faces[f].direction = direction.UP
 
+                                    case direction.DOWN:
+                                        if not prime:
+                                            matrix[r][t].faces[f].direction = direction.RIGHT
+                                        else:
+                                            matrix[r][t].faces[f].direction = direction.LEFT
 
+                                    case direction.RIGHT:
+                                        if not prime:
+                                            matrix[r][t].faces[f].direction = direction.UP
+                                        else:
+                                            matrix[r][t].faces[f].direction = direction.DOWN
+
+                                    case _:
+                                        pass
 
 
             if prime:
                 matrix = rotate_counterclockwise(matrix)
             else:
                 matrix = rotate_clockwise(matrix)
+
         self.write_face(face, matrix)
 
 

@@ -2,7 +2,6 @@ from cube import cube, cube_tile
 from properties import color, direction 
 
 if __name__ == "__main__":
-    tile1 = cube_tile([color.RED, color.GREEN, color.YELLOW])
     rubik = cube()
     #print(rubik.data)
     rubik.load_solved_cube()
