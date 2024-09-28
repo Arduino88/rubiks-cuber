@@ -8,7 +8,7 @@ if __name__ == "__main__":
     rubik.validate_cube()
     rubik.print_cube()
     print('------------------\n')
-    rubik.turn(direction.FRONT, turns=1, prime=False)
+    rubik.turn(direction.BACK, turns=1, prime=False)
 
     # Tested: UP, FRONT, RIGHT, LEFT, DOWN, BACK 
 

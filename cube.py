@@ -92,7 +92,7 @@ class cube:
                 for j in range(3):
                     self.data[layer][i][j] = cube_tile(generate_tile(layer, i, j))
 
-    def read_face(self, face: direction) -> List[List[cube_tile]]:
+    def read_face(self, face: direction):
         match face:
             case direction.UP:
                 matrix = self.data[0]
@@ -148,11 +148,16 @@ class cube:
                         self.data[2][2 - i][j] = matrix[i][j]
 
 
-    def turn(self, face: direction, turns: int, prime: bool):
-        matrix = self.read_face(face)
+    def turn(self, turn_face: direction, turns: int, prime: bool):
+        matrix = self.read_face(turn_face)
         for _ in range(turns):
+            if prime:
+                matrix = rotate_counterclockwise(matrix)
+            else:
+                matrix = rotate_clockwise(matrix)
+
             matrix_temp = copy.copy(matrix)
-            match face:
+            match turn_face:
                 case direction.UP:
                     for r, row in enumerate(matrix_temp):
                         for t, tile in enumerate(row):
@@ -189,12 +194,12 @@ class cube:
                     for r, row in enumerate(matrix_temp):
                         for t, tile in enumerate(row):
                             for f, copied_face in enumerate(tile.faces):
-                                match copied_face:                                        
+                                match copied_face.direction:                                        
                                     case direction.LEFT:
                                         if not prime:
-                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.DOWN)
-                                        else:
                                             matrix[r][t].faces[f] = cube_face(copied_face.color, direction.UP)
+                                        else:
+                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.DOWN)
                                     
                                     case direction.UP:
                                         if not prime:
@@ -204,13 +209,15 @@ class cube:
 
                                     case direction.RIGHT:
                                         if not prime:
-                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.UP)
-                                        else:
                                             matrix[r][t].faces[f] = cube_face(copied_face.color, direction.DOWN)
+                                        else:
+                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.UP)
 
                                     case direction.DOWN:
                                         if not prime:
                                             matrix[r][t].faces[f] = cube_face(copied_face.color, direction.LEFT)
+                                            #debug = cube_face(copied_face.color, direction.LEFT)
+                                            #print("HERE MF ->", cube_face.color, cube_face.direction)
                                         else:
                                             matrix[r][t].faces[f] = cube_face(copied_face.color, direction.RIGHT)
 
@@ -222,7 +229,7 @@ class cube:
                     for r, row in enumerate(matrix_temp):
                         for t, tile in enumerate(row):
                             for f, copied_face in enumerate(tile.faces):
-                                match copied_face:                                        
+                                match copied_face.direction:                                        
                                     case direction.UP:
                                         if not prime:
                                             matrix[r][t].faces[f] = cube_face(copied_face.color, direction.FRONT)
@@ -255,7 +262,7 @@ class cube:
                     for r, row in enumerate(matrix_temp):
                         for t, tile in enumerate(row):
                             for f, copied_face in enumerate(tile.faces):
-                                match copied_face:                                        
+                                match copied_face.direction:                                        
                                     case direction.FRONT:
                                         if not prime:
                                             matrix[r][t].faces[f] = cube_face(copied_face.color, direction.UP)
@@ -287,7 +294,7 @@ class cube:
                     for r, row in enumerate(matrix_temp):
                         for t, tile in enumerate(row):
                             for f, copied_face in enumerate(tile.faces):
-                                match copied_face:                                        
+                                match copied_face.direction:                                        
                                     case direction.FRONT:
                                         if not prime:
                                             matrix[r][t].faces[f] = cube_face(copied_face.color, direction.RIGHT)
@@ -320,7 +327,7 @@ class cube:
                     for r, row in enumerate(matrix_temp):
                         for t, tile in enumerate(row):
                             for f, copied_face in enumerate(tile.faces):
-                                match copied_face:                                        
+                                match copied_face.direction:                                        
                                     case direction.UP:
                                         if not prime:
                                             matrix[r][t].faces[f] = cube_face(copied_face.color, direction.LEFT)
@@ -348,13 +355,16 @@ class cube:
                                     case _:
                                         pass
 
+        print('debug line')
+        for row in matrix:
+            for tile in row:
+                stringamabob = ''
+                for x in tile.faces: 
+                    stringamabob += f'{x.color}, {x.direction} -- '
+                
+                print(stringamabob)
 
-            if prime:
-                matrix = rotate_counterclockwise(matrix)
-            else:
-                matrix = rotate_clockwise(matrix)
-
-        self.write_face(face, matrix)
+        self.write_face(turn_face, matrix)
 
 
 
