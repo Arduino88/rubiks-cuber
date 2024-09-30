@@ -120,7 +120,7 @@ class cube:
     def write_face(self, face: direction, matrix: List[List[cube_tile]]):
         match face:
             case direction.UP:
-                self.data[0] = matrix;
+                self.data[0] = matrix
             
             case direction.RIGHT:
                 for i in range(3):
