@@ -355,14 +355,12 @@ class Cube:
                                     case _:
                                         pass
 
-        print('debug line')
         for row in matrix:
             for tile in row:
                 stringamabob = ''
                 for x in tile.faces: 
                     stringamabob += f'{x.color}, {x.direction} -- '
                 
-                print(stringamabob)
 
         self.write_face(turn_face, matrix)
 

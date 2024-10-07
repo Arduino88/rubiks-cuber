@@ -1,7 +1,6 @@
 from typing import List
 
 def transpose(matrix: List[list]) -> List[list]:
-    print('transpose() called')
     n = len(matrix)
     m = len(matrix[0])
 
