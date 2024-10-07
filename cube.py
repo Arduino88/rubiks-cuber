@@ -49,7 +49,7 @@ class cube_tile:
         return return_str
 
 
-class cube:
+class Cube:
     def __init__(self):
         self.data = [[[None for _ in range(3)] for _ in range(3)] for _ in range(3)]
 
