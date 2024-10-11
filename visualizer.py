@@ -2,7 +2,9 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from matplotlib import colors as mcolors
 from enum import Enum
-from properties import color
+from properties import color, direction
+from cube import Cube
+from typing import List
 
 color_map = {
     color.WHITE: 'white',
@@ -12,6 +14,18 @@ color_map = {
     color.ORANGE: 'orange',
     color.YELLOW: 'yellow'
 }
+
+def read_face_colors(cube: Cube, scan_face: direction) -> List[List[color]]:
+    unprocessed_matrix = cube.read_face(scan_face)
+    matrix = [
+        [
+            [tile_face.color for tile_face in tile.faces if tile_face.direction == scan_face][0]
+            for tile in row if any(tile_face.direction == scan_face for tile_face in tile.faces)
+        ]
+        for row in unprocessed_matrix
+    ]
+    return matrix
+
 
 def display(matrix_up, matrix_front, matrix_right, matrix_back, matrix_left, matrix_down):
     fig, axs = plt.subplots(3, 4, figsize=(10, 10))
@@ -45,6 +59,16 @@ def display(matrix_up, matrix_front, matrix_right, matrix_back, matrix_left, mat
 
     plt.tight_layout()
     plt.show()
+
+def display_cube(cube: Cube):
+    matrix_up = read_face_colors(cube, direction.UP)
+    matrix_right = read_face_colors(cube, direction.RIGHT)
+    matrix_back = read_face_colors(cube, direction.BACK)
+    matrix_left = read_face_colors(cube, direction.LEFT)
+    matrix_front = read_face_colors(cube, direction.FRONT)
+    matrix_down = read_face_colors(cube, direction.DOWN)
+    display(matrix_up, matrix_front, matrix_right, matrix_back, matrix_left, matrix_down)
+
 
 if __name__ == '__main__':
     matrix_up = [[color.WHITE, color.WHITE, color.WHITE],

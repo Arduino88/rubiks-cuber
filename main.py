@@ -3,7 +3,7 @@ from properties import color, direction
 from solver import score_heuristic
 from typing import List
 import copy
-from visualizer import visualize_cube
+from visualizer import display_cube 
 
 def online_scrambler_wrapper(moves: str) -> List[str]:
     return moves.replace("'", "i").strip()
@@ -13,20 +13,24 @@ if __name__ == "__main__":
     #print(rubik.data)
     rubik.load_solved_cube()
     rubik.validate_cube()
-    rubik.print_cube()
+    #rubik.print_cube()
     solved_cube = copy.deepcopy(rubik)
     print('SCORE:', score_heuristic(rubik, solved_cube))
 
-    visualize_cube(rubik)
+    display_cube(rubik)
 
     print('------------------\n')
     #rubik.write_moves(online_scrambler_wrapper("F2 R' D' F2 U' L F R D2 U2 F' U' D' F2 U' B' D2 R B D2 B2 F2 D R F2"))
-    rubik.write_moves(online_scrambler_wrapper("R2 R2"))
+    
+    moves = online_scrambler_wrapper("R")
+    print(moves)
+    rubik.write_moves(moves)
 
+    display_cube(rubik)
 
     # Tested: UP, FRONT, RIGHT, LEFT, DOWN, BACK 
 
     print('SCORE:', score_heuristic(rubik, solved_cube))
 
     print('TURNED --')
-    rubik.print_cube()
+    #rubik.print_cube()
