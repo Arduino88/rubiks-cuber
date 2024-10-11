@@ -27,26 +27,30 @@ class cube_tile:
         else:
             self.type = tile_type.CORE
 
-    def get_properties(self) -> str:
-        return_str = ''
-        if self.faces is None:
-            return_str += ('core tile')
-            return return_str
-        
-        match self.type:
-            case tile_type.CENTER:
-                return_str += (f'center:')
-                
-            case tile_type.EDGE:
-                return_str += (f'edge:')
+    def get_properties(self) -> list: # returns [tile_type, [(color, direction), (color, direction) ...]]
+        color_string = {
+            color.RED: "RED",
+            color.ORANGE: "ORANGE",
+            color.GREEN: "GREEN",
+            color.BLUE: "BLUE",
+            color.WHITE: "WHITE",
+            color.YELLOW: "YELLOW",
+        }
 
-            case tile_type.CORNER:
-                return_str += (f'corner:')
+        direction_string = {
+            direction.UP: "UP",
+            direction.DOWN: "DOWN",
+            direction.LEFT: "LEFT",
+            direction.RIGHT: "RIGHT",
+            direction.BACK: "BACK",
+            direction.FRONT: "FRONT"
+        }
 
+        face_list = []
         for face in self.faces:
-            return_str += ' (' + str(face.color) + ' ' + str(face.direction) + ')'
+            face_list.append((color_string[face.color], direction_string[face.direction]))
 
-        return return_str
+        return [self.type, face_list]
 
 
 class Cube:
@@ -365,10 +369,16 @@ class Cube:
 
 
     def print_cube(self): #TODO: improve this
+        
         for l, layer in enumerate(self.data):
             for r, row in enumerate(layer):
                 for t, tile in enumerate(row):
-                    print(f'layer {l}, row {r}, tile {t}: {tile.get_properties()}')
+                    tile_type, face_list = tile.get_properties()
+                    print(f'LAYER {l} ROW {r} TILE {t} type: {tile.type}, faces: {face_list}')
+                
+
+                # returns [tile_type, [(color, direction), (color, direction) ...]]
+
                     
     
     def write_moves(self, moveList: List[str]):
