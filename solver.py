@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Tuple
 from collections import deque;
 from cube import Cube, cube_tile, cube_face
 
@@ -7,6 +7,12 @@ from cube import Cube, cube_tile, cube_face
 def solve(cube: Cube) -> List[str]:
     pass
 
+def scaled(score: float, score_range: Tuple[float], max_return: float) -> float:
+    if not score_range[0] <= score <= score_range[1]:
+        raise ValueError(f'invalid score: {score}, range: {score_range}')
+    ratio = score / score_range[1]
+    return max_return * ratio
+    
 
 def score_heuristic(solved_cube: Cube, cube: Cube) -> int:
     score = 0
@@ -15,7 +21,7 @@ def score_heuristic(solved_cube: Cube, cube: Cube) -> int:
             for c, tile in enumerate(row):
                 score += tile_score(tile, solved_cube, l, r, c)
 
-    return score
+    return scaled(score, (0, 60), 26)
 
 
 def tile_score(search_tile: cube_tile, solved_cube: Cube, tile_layer: int, tile_row: int, tile_col: int) -> int:
@@ -25,11 +31,7 @@ def tile_score(search_tile: cube_tile, solved_cube: Cube, tile_layer: int, tile_
         for r, row in enumerate(layer):
             for c, tile in enumerate(row):
                 if tile.type == search_tile.type and set(x.color for x in tile.faces) == set(x.color for x in search_tile.faces):
-                    # found
-                    for face in tile.faces:
-                        for search_face in search_tile.faces:
-                            if face.color == search_face.color and face.direction == search_face.direction:
-                                score += 1
+                    # found 
                     searching = False
                     break
             if not searching:
