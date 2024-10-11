@@ -216,8 +216,6 @@ class Cube:
                                     case direction.DOWN:
                                         if not prime:
                                             matrix[r][t].faces[f] = cube_face(copied_face.color, direction.LEFT)
-                                            #debug = cube_face(copied_face.color, direction.LEFT)
-                                            #print("HERE MF ->", cube_face.color, cube_face.direction)
                                         else:
                                             matrix[r][t].faces[f] = cube_face(copied_face.color, direction.RIGHT)
 
@@ -366,7 +364,7 @@ class Cube:
 
 
 
-    def print_cube(self):
+    def print_cube(self): #TODO: improve this
         for l, layer in enumerate(self.data):
             for r, row in enumerate(layer):
                 for t, tile in enumerate(row):

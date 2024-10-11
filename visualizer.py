@@ -24,6 +24,13 @@ def read_face_colors(cube: Cube, scan_face: direction) -> List[List[color]]:
         ]
         for row in unprocessed_matrix
     ]
+
+    shape = [len(x) for x in matrix]
+
+    if shape != [3, 3, 3]:
+        cube.print_cube()
+        raise ValueError(f'matrix is misshapen: {shape} read_face_colors()') 
+
     return matrix
 
 
@@ -41,9 +48,11 @@ def display(matrix_up, matrix_front, matrix_right, matrix_back, matrix_left, mat
 
     for (matrix, label), (row, col) in zip(face_matrices, [(0, 1), (1, 0), (1, 1), (1, 2), (1, 3), (2, 1)]):
         axs[row, col].set_title(label)
-        
+       
+        print(matrix)
         for i in range(3):
             for j in range(3):
+                print(label, i, j)
                 color = color_map[matrix[i][j]]
                 rect = patches.Rectangle((j, i), 1, 1, facecolor=color, edgecolor='black')
                 axs[row, col].add_patch(rect)
