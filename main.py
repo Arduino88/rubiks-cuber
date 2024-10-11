@@ -6,7 +6,7 @@ import copy
 from visualizer import display_cube 
 
 def online_scrambler_wrapper(moves: str) -> List[str]:
-    return moves.replace("'", "i").strip()
+    return moves.replace("'", "i").split()
 
 if __name__ == "__main__":
     rubik = Cube()
