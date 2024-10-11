@@ -376,7 +376,7 @@ class Cube:
     def write_moves(self, moveList: List[str]):
         for move in moveList:
             dir: direction
-            double_turn = False
+            turns = 1
             prime = False
             match move[0]:
                 case "U":
@@ -397,10 +397,7 @@ class Cube:
                     case "i":
                         prime = True
                     case "2":
-                        double_turn = True
-            
-            if not double_turn:
-                self.turn(dir, 1, prime)    
-            else:
-                self.turn(dir, 2, prime)
+                        turns = 2
+
+            self.turn(dir, turns, prime)    
 

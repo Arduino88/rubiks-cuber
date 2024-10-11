@@ -10,27 +10,22 @@ def online_scrambler_wrapper(moves: str) -> List[str]:
 
 if __name__ == "__main__":
     rubik = Cube()
-    #print(rubik.data)
     rubik.load_solved_cube()
     rubik.validate_cube()
     #rubik.print_cube()
     solved_cube = copy.deepcopy(rubik)
     print('SCORE:', score_heuristic(rubik, solved_cube))
 
-    display_cube(rubik)
+    #display_cube(rubik)
 
-    print('------------------\n')
     #rubik.write_moves(online_scrambler_wrapper("F2 R' D' F2 U' L F R D2 U2 F' U' D' F2 U' B' D2 R B D2 B2 F2 D R F2"))
     
-    moves = online_scrambler_wrapper("R")
+    moves = online_scrambler_wrapper("R2 R2")
     print(moves)
     rubik.write_moves(moves)
-
     display_cube(rubik)
-
-    # Tested: UP, FRONT, RIGHT, LEFT, DOWN, BACK 
-
     print('SCORE:', score_heuristic(rubik, solved_cube))
 
-    print('TURNED --')
-    #rubik.print_cube()
+    rubik.write_moves(online_scrambler_wrapper("R2"))
+    display_cube(rubik)
+    print('SCORE:', score_heuristic(rubik, solved_cube))
