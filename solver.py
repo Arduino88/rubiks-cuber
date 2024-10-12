@@ -1,18 +1,56 @@
 from typing import List, Tuple
 from collections import deque;
 from cube import Cube, cube_tile, cube_face
+from visualizer import display_cube
+import heapq
+import copy
+
+def solve(initial_cube: Cube, solved_cube: Cube) -> List[str]:
+    came_from = {initial_cube.hash(): None}
+    distances = {initial_cube.hash(): 0}
+    heap = [(score_heuristic(solved_cube, initial_cube), initial_cube)]
 
 
+    while heap:
+        print(heap)
+        adjusted_distance, cube = heapq.heappop(heap)
+        #search loop
+        for move in 'U F D L R B Ui Fi Di Li Ri Bi'.split():
+            
+            temp_cube = copy.deepcopy(cube)
+            temp_cube.write_moves(move)
+            
+            if score_heuristic(solved_cube, temp_cube) == 0:
+                print('SOLUTION FOUND')
+                return
 
-def solve(cube: Cube) -> List[str]:
-    pass
+            hash = temp_cube.hash()
+            if hash not in distances:
+                came_from[hash] = cube
+                distances[hash] = distances[cube.hash()] + 1
+
+            
+            else:
+                if distances[hash] > distances[cube.hash()] + 1:
+                    distances[hash] = distance[cube.hash()] + 1
+                    came_from[hash] = cube
+
+            
+            heapq.heappush(heap, (distances[cube.hash()] + score_heuristic(solved_cube, temp_cube) + 1, temp_cube))
+                
+
+    print('A* finished')
+    print(distances)
+    print('SEPARATOR \n\n\n')
+    print(came_from)
+
+
 
 def scaled(score: float, score_range: Tuple[float], max_return: float) -> float:
     if not score_range[0] <= score <= score_range[1]:
         raise ValueError(f'invalid score: {score}, range: {score_range}')
     ratio = score / score_range[1]
     return max_return * ratio
-    
 
 def score_heuristic(solved_cube: Cube, cube: Cube) -> int:
     score = 0
