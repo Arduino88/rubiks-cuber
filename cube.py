@@ -299,21 +299,39 @@ class Cube:
                                 match copied_face.direction:                                        
                                     case direction.FRONT:
                                         if not prime:
-                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.RIGHT)
+                                            matrix[r][t].faces[f] = cube_face(
+                                                copied_face.color, 
+                                                direction.RIGHT
+                                            )
                                         else:
-                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.LEFT)
+                                            matrix[r][t].faces[f] = cube_face(
+                                                copied_face.color, 
+                                                direction.LEFT
+                                            )
                                     
                                     case direction.RIGHT:
                                         if not prime:
-                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.BACK)
+                                            matrix[r][t].faces[f] = cube_face(
+                                                copied_face.color,
+                                                direction.BACK
+                                            )
                                         else:
-                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.FRONT)
+                                            matrix[r][t].faces[f] = cube_face(
+                                                copied_face.color,
+                                                direction.FRONT
+                                            )
 
                                     case direction.BACK:
                                         if not prime:
-                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.LEFT)
+                                            matrix[r][t].faces[f] = cube_face(
+                                                copied_face.color,
+                                                direction.LEFT
+                                            )
                                         else:
-                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.RIGHT)
+                                            matrix[r][t].faces[f] = cube_face(
+                                                copied_face.color,
+                                                direction.RIGHT
+                                            )
 
                                     case direction.LEFT:
                                         if not prime:
@@ -381,6 +399,15 @@ class Cube:
 
                     
     
+    def hash(self) -> str:
+        return ''.join(
+        f"{face.color}-{face.direction}"
+        for layer in self.data
+        for row in layer
+        for tile in row
+        for face in tile.faces
+        )
+        
     def write_moves(self, moveList: List[str]):
         for move in moveList:
             dir: direction
