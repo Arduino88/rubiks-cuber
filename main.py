@@ -31,11 +31,11 @@ if __name__ == "__main__":
 
     #display_cube(rubik)
 
-    rubik.write_moves(online_scrambler_wrapper(
-        "F2 R' D' F2 U' L F R D2 U2 F' U' D' F2 U' B' D2 R B D2 B2 F2 D R F2"
-    ))
+    #rubik.write_moves(online_scrambler_wrapper("F2 R' D' F2 U' L F R D2 U2 F' U' D' F2 U' B' D2 R B D2 B2 F2 D R F2"))
+
+    rubik.write_moves(online_scrambler_wrapper("F2 B D R"))
 
     solve(rubik, solved_cube) 
     #rubik.write_moves(online_scrambler_wrapper("B2 U"))
-    display_cube(rubik)
-    print('SCORE:', score_heuristic(rubik, solved_cube))
+    #display_cube(rubik)
+    #print('SCORE:', score_heuristic(rubik, solved_cube))
