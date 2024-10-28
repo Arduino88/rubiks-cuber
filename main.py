@@ -20,13 +20,12 @@ if __name__ == "__main__":
 
     #rubik.write_moves(online_scrambler_wrapper("F2 R' D' F2 U' L F R D2 U2 F' U' D' F2 U' B' D2 R B D2 B2 F2 D R F2"))
     
-    moves = online_scrambler_wrapper("R2 R2")
+    moves = online_scrambler_wrapper("R")
     print(moves)
     rubik.write_moves(moves)
     #display_cube(rubik)
-    #print('SCORE:', score_heuristic(rubik, solved_cube))
+    print('SCORE:', score_heuristic(rubik, solved_cube))
 
-    rubik.write_moves(online_scrambler_wrapper("R2"))
     #display_cube(rubik)
-    Cube.print_cube(rubik)
+    #Cube.print_cube(rubik)
     #print('SCORE:', score_heuristic(rubik, solved_cube))

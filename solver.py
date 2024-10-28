@@ -19,9 +19,10 @@ def score_heuristic(solved_cube: Cube, cube: Cube) -> int:
     for l, layer in enumerate(cube.data):
         for r, row in enumerate(layer):
             for c, tile in enumerate(row):
+                print(tile.get_properties())
                 score += tile_score(tile, solved_cube, l, r, c)
 
-    return scaled(score, (0, 60), 26)
+    return scaled(score, (0, 72), 72)
 
 def opposite(face_set: set) -> set:
     for face in face_set:
@@ -39,10 +40,11 @@ def tile_score(search_tile: cube_tile, solved_cube: Cube, tile_layer: int, tile_
     searching = True
     
     piece = cube_tile.get_properties(search_tile)
+    #print("unsolved", piece)
     piece = piece.replace(': (', ',')
     piece = piece.replace(') (', ',')
     piece_data = piece[:-1].split(',')
-    piece_type = piece_data[0][:-1] #centre, edge, etc.
+    piece_type = piece_data[0] #centre, edge, etc.
     face_orient = set()
     
     for i in piece_data[1:]:
@@ -64,10 +66,9 @@ def tile_score(search_tile: cube_tile, solved_cube: Cube, tile_layer: int, tile_
     s_piece = piece.replace(': (', ',')
     s_piece = s_piece.replace(') (', ',')
     s_piece_data = s_piece[:-1].split(',')
-    s_piece_type = s_piece_data[0][:-1] #centre, edge, etc.
     s_face_orient = set()
     
-    for i in piece_data[1:]:
+    for i in s_piece_data[1:]:
         s_face_orient.add(i)
     
         
@@ -98,6 +99,7 @@ def tile_score(search_tile: cube_tile, solved_cube: Cube, tile_layer: int, tile_
                     #+1 if misaligned 
                     aligned = False
                     for tile_face in face_orient:
+                        #print(tile_face, face_orient, s_face_orient)
                         if(tile_face in s_face_orient):
                             aligned = True
                     if(aligned == False):
@@ -140,6 +142,7 @@ def tile_score(search_tile: cube_tile, solved_cube: Cube, tile_layer: int, tile_
                 case _:
                     pass
     
+    print(score)
     return score
     
     
