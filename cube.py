@@ -27,26 +27,30 @@ class cube_tile:
         else:
             self.type = tile_type.CORE
 
-    def get_properties(self) -> str:
-        return_str = ''
-        if self.faces is None:
-            return_str += ('core tile')
-            return return_str
-        
-        match self.type:
-            case tile_type.CENTER:
-                return_str += (f'center:')
-                
-            case tile_type.EDGE:
-                return_str += (f'edge:')
+    def get_properties(self) -> list: # returns [tile_type, [(color, direction), (color, direction) ...]]
+        color_string = {
+            color.RED: "RED",
+            color.ORANGE: "ORANGE",
+            color.GREEN: "GREEN",
+            color.BLUE: "BLUE",
+            color.WHITE: "WHITE",
+            color.YELLOW: "YELLOW",
+        }
 
-            case tile_type.CORNER:
-                return_str += (f'corner:')
+        direction_string = {
+            direction.UP: "UP",
+            direction.DOWN: "DOWN",
+            direction.LEFT: "LEFT",
+            direction.RIGHT: "RIGHT",
+            direction.BACK: "BACK",
+            direction.FRONT: "FRONT"
+        }
 
+        face_list = []
         for face in self.faces:
-            return_str += ' (' + str(face.color) + ' ' + str(face.direction) + ')'
+            face_list.append((color_string[face.color], direction_string[face.direction]))
 
-        return return_str
+        return [self.type, face_list]
 
 
 class Cube:
@@ -216,8 +220,6 @@ class Cube:
                                     case direction.DOWN:
                                         if not prime:
                                             matrix[r][t].faces[f] = cube_face(copied_face.color, direction.LEFT)
-                                            #debug = cube_face(copied_face.color, direction.LEFT)
-                                            #print("HERE MF ->", cube_face.color, cube_face.direction)
                                         else:
                                             matrix[r][t].faces[f] = cube_face(copied_face.color, direction.RIGHT)
 
@@ -297,21 +299,39 @@ class Cube:
                                 match copied_face.direction:                                        
                                     case direction.FRONT:
                                         if not prime:
-                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.RIGHT)
+                                            matrix[r][t].faces[f] = cube_face(
+                                                copied_face.color, 
+                                                direction.RIGHT
+                                            )
                                         else:
-                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.LEFT)
+                                            matrix[r][t].faces[f] = cube_face(
+                                                copied_face.color, 
+                                                direction.LEFT
+                                            )
                                     
                                     case direction.RIGHT:
                                         if not prime:
-                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.BACK)
+                                            matrix[r][t].faces[f] = cube_face(
+                                                copied_face.color,
+                                                direction.BACK
+                                            )
                                         else:
-                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.FRONT)
+                                            matrix[r][t].faces[f] = cube_face(
+                                                copied_face.color,
+                                                direction.FRONT
+                                            )
 
                                     case direction.BACK:
                                         if not prime:
-                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.LEFT)
+                                            matrix[r][t].faces[f] = cube_face(
+                                                copied_face.color,
+                                                direction.LEFT
+                                            )
                                         else:
-                                            matrix[r][t].faces[f] = cube_face(copied_face.color, direction.RIGHT)
+                                            matrix[r][t].faces[f] = cube_face(
+                                                copied_face.color,
+                                                direction.RIGHT
+                                            )
 
                                     case direction.LEFT:
                                         if not prime:
@@ -366,13 +386,28 @@ class Cube:
 
 
 
-    def print_cube(self):
+    def print_cube(self): #TODO: improve this
+        
         for l, layer in enumerate(self.data):
             for r, row in enumerate(layer):
                 for t, tile in enumerate(row):
-                    print(f'layer {l}, row {r}, tile {t}: {tile.get_properties()}')
+                    tile_type, face_list = tile.get_properties()
+                    print(f'LAYER {l} ROW {r} TILE {t} type: {tile.type}, faces: {face_list}')
+                
+
+                # returns [tile_type, [(color, direction), (color, direction) ...]]
+
                     
     
+    def hash(self) -> str:
+        return ''.join(
+        f"{face.color}-{face.direction}"
+        for layer in self.data
+        for row in layer
+        for tile in row
+        for face in tile.faces
+        )
+        
     def write_moves(self, moveList: List[str]):
         for move in moveList:
             dir: direction
