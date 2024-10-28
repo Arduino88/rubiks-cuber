@@ -1,6 +1,6 @@
 from typing import List, Tuple
 from collections import deque;
-from cube import Cube, cube_tile, cube_face
+from cube import Cube, cube_tile, cube_face, direction
 from visualizer import display_cube
 import heapq
 import copy
@@ -79,20 +79,30 @@ def score_heuristic(solved_cube: Cube, cube: Cube) -> int:
     for l, layer in enumerate(cube.data):
         for r, row in enumerate(layer):
             for c, tile in enumerate(row):
-                print(tile.get_properties())
                 score += tile_score(tile, solved_cube, l, r, c)
 
-    return scaled(score, (0, 72), 72)
+    return scaled(score, (0, 72), 26)
 
-def opposite(face_set: set) -> set:
-    for face in face_set:
-        face.replace('UP', 'DOWN')
-        face.replace('DOWN', 'UP')
-        face.replace('RIGHT', 'LEFT')
-        face.replace('LEFT', 'RIGHT')
-        face.replace('FRONT', 'BACK')
-        face.replace('BACK', 'FRONT')
-    return face_set
+def opposite(face_list: list) -> list:
+    op_face_list = []
+    
+    for face in face_list:
+        if(face[1] == 'UP'):
+            op_face = (face[0], 'DOWN')
+        elif(face[1] == 'DOWN'):
+            op_face = (face[0], 'UP')
+        elif(face[1] == 'RIGHT'):
+            op_face = (face[0], 'LEFT')
+        elif(face[1] == 'LEFT'):
+            op_face = (face[0], 'RIGHT')
+        elif(face[1] == 'BACK'):
+            op_face = (face[0], 'FRONT')
+        elif(face[1] == 'FRONT'):
+            op_face = (face[0],  'BACK')
+
+        op_face_list.append(op_face)
+        
+    return op_face_list
 
 
 def tile_score(search_tile: cube_tile, solved_cube: Cube, tile_layer: int, tile_row: int, tile_col: int) -> int:
@@ -100,109 +110,95 @@ def tile_score(search_tile: cube_tile, solved_cube: Cube, tile_layer: int, tile_
     searching = True
     
     piece = cube_tile.get_properties(search_tile)
-    #print("unsolved", piece)
-    piece = piece.replace(': (', ',')
-    piece = piece.replace(') (', ',')
-    piece_data = piece[:-1].split(',')
-    piece_type = piece_data[0] #centre, edge, etc.
-    face_orient = set()
-    
-    for i in piece_data[1:]:
-        face_orient.add(i)    
+    piece_type = piece[0]
+    piece_faces = piece[1]    
 
     for l, layer in enumerate(solved_cube.data):
         for r, row in enumerate(layer):
             for c, tile in enumerate(row):
                 if tile.type == search_tile.type and set(x.color for x in tile.faces) == set(x.color for x in search_tile.faces):
                     # found
-                    s_tile = tile.get_properties()
+                    s_piece = tile.get_properties()
                     searching = False
                     break
             if not searching:
                 break
         if not searching:
             break
-    
-    s_piece = piece.replace(': (', ',')
-    s_piece = s_piece.replace(') (', ',')
-    s_piece_data = s_piece[:-1].split(',')
-    s_face_orient = set()
-    
-    for i in s_piece_data[1:]:
-        s_face_orient.add(i)
-    
+        
+    s_piece_faces = s_piece[1]
         
     #NOTE - Manhattan Distance / 2 is the number of turns required.
     #only true for corner pieces - edge pieces have more dependancies 
     score += (abs(l - tile_layer) + abs(r - tile_row) + abs(c - tile_col)) / 2
     
+    
     #orientation fix
     match score:
         case 0:
             match piece_type:
-                case "edge":
+                case piece_type.EDGE:
                     #+3 if misoriented
-                    if(s_face_orient != face_orient):
+                    if(s_piece_faces != piece_faces):
                         score += 3
-                case "corner":
+                case piece_type.CORNER:
                     #+2 if misoriented
-                    if(s_face_orient != face_orient):
+                    if(s_piece_faces != piece_faces):
                         score += 2
                 case _:
                     pass
         case 1:
             match piece_type:
-                case "edge":
+                case piece_type.EDGE:
                     #+1 if actually a double move away
                     if(max(abs(l - tile_layer), abs(r - tile_row), abs(c - tile_col)) == 2):
                         score += 1  
                     #+1 if misaligned 
                     aligned = False
-                    for tile_face in face_orient:
-                        #print(tile_face, face_orient, s_face_orient)
-                        if(tile_face in s_face_orient):
+                    for tile_face in piece_faces:
+                        #print(tile_face, piece_faces, s_piece_faces)
+                        if(tile_face in s_piece_faces):
                             aligned = True
                     if(aligned == False):
                         score += 1
-                case "corner":
-                    #+1 if misoriented
+                case piece_type.CORNER:
+                    #+2 if misoriented
                     aligned = False
-                    for tile_face in face_orient:
-                        if(tile_face in s_face_orient):
+                    for tile_face in piece_faces:
+                        if(tile_face in s_piece_faces):
                             aligned = True
                     if(aligned == False):
-                        score += 1 
+                        score += 2 
                 case _:
                     pass
         case 2:
             match piece_type:
-                case "edge":
+                case piece_type.EDGE:
                     #+1 if far side
                     if((l - tile_layer) == 0 or (r - tile_row) == 0 or (c - tile_col) == 0):
                         score += 1
                     #+1 if opposite orientation matches
                     aligned = True
-                    for tile_face in opposite(face_orient):
-                        if(tile_face in s_face_orient):
+                    for tile_face in opposite(piece_faces):
+                        if(tile_face in s_piece_faces):
                             aligned = False
                     if(aligned == False):
                         score += 1
                     
                     
-                case "corner":
+                case piece_type.CORNER:
                     pass #must always be two
                 case _:
                     pass
         case 3:
             match piece_type:
-                case "edge":
+                case piece_type.EDGE:
                     pass #case doesnt exist lol in our stupid set up
-                case "corner":
+                case piece_type.CORNER:
                     pass #must always be 3
                 case _:
                     pass
-    
-    print(score)
+
     return score
     
     
