@@ -7,7 +7,6 @@ import copy
 from random import random
 import sys
 
-def solve(initial_cube: Cube, solved_cube: Cube) -> List[str]:
 def solve(solved_cube: Cube, initial_cube: Cube) -> List[str]:
     came_from = {initial_cube.hash(): None}
     distances = {initial_cube.hash(): 0}
@@ -59,7 +58,6 @@ def solve(solved_cube: Cube, initial_cube: Cube) -> List[str]:
                 if display_counter > 0:
                     display_counter -= 1             
                 else:
-                    display_counter = 1000
                     display_counter = 10000
                     display_cube(min_cube_state)
 
@@ -83,7 +81,8 @@ def score_heuristic(solved_cube: Cube, cube: Cube) -> int:
             for c, tile in enumerate(row):
                 score += tile_score(tile, solved_cube, l, r, c)
 
-    return scaled(score, (0, 72), 26)
+    return score/8
+    #return scaled(score, (0, 72), 26)
 
 def opposite(face_list: list) -> list:
     op_face_list = []
