@@ -8,63 +8,68 @@ from random import random
 import sys
 
 def solve(solved_cube: Cube, initial_cube: Cube) -> List[str]:
-    came_from = {initial_cube.hash(): None}
-    distances = {initial_cube.hash(): 0}
-    heap = [(score_heuristic(solved_cube, initial_cube), random()/1000, initial_cube)]
-    min_score = float('inf')
-    min_cube_state = None
-    visited = set()
-    display_counter = 10000
 
-    while heap:
-        #print(heap)
-        adjusted_distance, _, cube = heapq.heappop(heap)
-        visited.add(cube.hash())
-        #search loop
-        for move in 'U F D L R B Ui Fi Di Li Ri Bi'.split():
-            
-            temp_cube = copy.deepcopy(cube)
-            temp_cube.write_moves(move)
-            hash = temp_cube.hash()
-            
-            if score_heuristic(solved_cube, temp_cube) == 0:
-                print('SOLUTION FOUND')
-                min_cube_state = temp_cube
-                display_cube(min_cube_state)
-                return
+    #IDA* search
 
-            if hash not in visited:
-                came_from[hash] = cube
-                distances[hash] = distances[cube.hash()] + 1
+    def score_node(current_cost, node: Cube):
+        return current_cost + score_heuristic(solved_cube, node)
+
     
-            
-            else:
-                if distances[hash] > distances[cube.hash()] + 1:
-                    distances[hash] = distances[cube.hash()] + 1
-                    came_from[hash] = cube
-            
-            
-            
-            if temp_cube.hash() not in visited:
-                score = score_heuristic(solved_cube, temp_cube)
-                if score < min_score:
-                    min_score = score
-                    min_cube_state = copy.deepcopy(temp_cube)
-                push_tuple = (score, random()/1000, temp_cube)
-                print(f'score: {score}, min_score: {min_score} len(heap): {len(heap)}, size: {sys.getsizeof(heap)}')
-                debug_heap = [heap[x][0] for x in range(min(10, len(heap)))]
-                print(debug_heap)
-                heapq.heappush(heap, push_tuple)
-                if display_counter > 0:
-                    display_counter -= 1             
-                else:
-                    display_counter = 10000
-                    display_cube(min_cube_state)
 
-    print('A* finished')
-    #print(distances)
-    #print('SEPARATOR \n\n\n')
-    #print(came_from)
+    def search(head: Cube, threshhold: int) -> int: # returns -1 if solution found, else returns minimum threshhold to continue search
+        q = deque()
+        visited = set()
+
+        q.appendleft((0, head, []))
+        min_threshhold = float('inf')
+
+        while q:
+            #print(q)
+            current_cost, node, moves = q.popleft()
+            visited.add(node.hash())
+
+            for move in 'U F D L R B Ui Fi Di Li Ri Bi'.split():
+                temp_cube = copy.deepcopy(node)
+                temp_cube.write_moves(move)
+                temp_moves = moves + [move]
+                
+
+                if temp_cube.hash() in visited:
+                    continue
+
+                if temp_cube.is_solved(solved_cube):
+                    print("SOLUTION FOUND")
+                    print(temp_moves)
+                    temp_cube.print_cube()
+                    return -1
+
+                score = score_node(current_cost, temp_cube) 
+                
+                if score <= threshhold:
+                    q.append((current_cost + 1, temp_cube, temp_moves))
+
+                else:
+                    min_threshhold = min(min_threshhold, score)
+
+        return min_threshhold
+
+
+    threshhold = 0
+    while True:
+        result = search(initial_cube, threshhold)
+        print(result)
+        if result == -1:
+            break
+        threshhold = result
+
+
+
+
+
+
+
+
+
 
 
 

@@ -152,6 +152,10 @@ class Cube:
                         self.data[2][2 - i][j] = matrix[i][j]
 
 
+    def is_solved(self, solved_cube) -> bool:
+        return self.hash() == solved_cube.hash()
+
+
     def turn(self, turn_face: direction, turns: int, prime: bool):
         matrix = self.read_face(turn_face)
         for _ in range(turns):
